@@ -1,37 +1,67 @@
-# JupyterLite Demo
+# MAT 274 Interactives
 
-[![lite-badge](https://jupyterlite.rtfd.io/en/latest/_static/badge.svg)](https://jupyterlite.github.io/demo)
+Hands-on activities for Differential Equations. Everything runs in your browser. Nothing to
+install, no account, no Python knowledge needed.
 
-JupyterLite deployed as a static site to GitHub Pages, for demo purposes.
+## Open it
 
-## ✨ Try it in your browser ✨
+**https://maleygoes.github.io/diffyqinteractives**
 
-➡️ **https://jupyterlite.github.io/demo**
+The first load takes 20 to 60 seconds while your browser downloads the math tools. After that
+it is fast. Use Chrome, Edge, Firefox, or Safari on a laptop or desktop. These do not work well
+on a phone.
 
-![github-pages](https://user-images.githubusercontent.com/591645/120649478-18258400-c47d-11eb-80e5-185e52ff2702.gif)
+## New here? Start with the tour
 
-## Requirements
+Open **00-start-here.ipynb** first. It is a five minute walkthrough of the three things you need
+to know: how to run a cell, what the output means, and what to do when something breaks. That is
+the entire skill set.
 
-JupyterLite is being tested against modern web browsers:
+## The interactives
 
-- Firefox 90+
-- Chromium 89+
+| Notebook | Topic | Time |
+| --- | --- | --- |
+| `00-start-here.ipynb` | How to use these notebooks | 5 min |
+| `01-slope-fields.ipynb` | Reading an ODE geometrically before solving it | 15 to 20 min |
 
-## Deploy your JupyterLite website on GitHub Pages
+More get added as we go through the semester.
 
-Check out the guide on the JupyterLite documentation: https://jupyterlite.readthedocs.io/en/latest/quickstart/deploy.html
+## How to work through one
 
-## Further Information and Updates
+Each activity is a stack of boxes called cells. Text cells explain something. Code cells make a
+picture when you run them. Go top to bottom, and read the text before you run the code under it.
 
-For more info, keep an eye on the JupyterLite documentation:
+Most sections ask you to predict something before you run the cell. Do it. The prediction is
+where the learning happens, and the picture is only feedback. Predicting wrong and finding out
+why is worth more than predicting right.
 
-- How-to Guides: https://jupyterlite.readthedocs.io/en/latest/howto/index.html
-- Reference: https://jupyterlite.readthedocs.io/en/latest/reference/index.html
+Some cells have sliders. Move them slowly and watch what changes and what stays put.
 
-This template provides the Pyodide kernel (`jupyterlite-pyodide-kernel`), the JavaScript kernel (`jupyterlite-javascript-kernel`), and the p5 kernel (`jupyterlite-p5-kernel`), along with other
-optional utilities and extensions to make the JupyterLite experience more enjoyable. See the
-[`requirements.txt` file](requirements.txt) for a list of all the dependencies provided.
+## Things worth knowing
 
-For a template based on the Xeus kernel, see the [`jupyterlite/xeus-python-demo` repository](https://github.com/jupyterlite/xeus-python-demo)
+**Your changes are not saved anywhere permanent.** Notebooks live in your browser's local storage
+for this browser on this computer. Clearing your history erases them. If you want to keep
+something, take a screenshot or write it in your notes.
 
+**You cannot break it.** Nothing you type here touches the real site. If a notebook gets into a
+weird state, go to the Kernel menu and choose "Restart Kernel and Run All Cells."
 
+**To get a clean copy back,** close the notebook, right click it in the file list on the left,
+delete it, then refresh the page. The original comes back.
+
+**Red error text is normal.** Usually it means a cell got run out of order. Scroll to the top and
+run the cells in order from the beginning.
+
+## Questions
+
+Bring them to class or office hours. If something is genuinely broken on the site, email me and
+say which notebook and what you clicked.
+
+## The demos folder
+
+`demos/` holds the sample notebooks that shipped with the software this site is built on. They
+are not course material. Ignore them, or poke around if you are curious.
+
+---
+
+Built with [JupyterLite](https://jupyterlite.readthedocs.io). BSD 3-Clause licensed.
