@@ -23,6 +23,7 @@ the entire skill set.
 | --- | --- | --- |
 | `00-start-here.ipynb` | How to use these notebooks | 5 min |
 | `01-slope-fields.ipynb` | Reading an ODE geometrically before solving it | 15 to 20 min |
+| `02-eulers-method.ipynb` | Stepping to a numerical solution, and when it lies to you | 15 to 20 min |
 
 More get added as we go through the semester.
 
