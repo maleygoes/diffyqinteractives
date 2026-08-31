@@ -27,6 +27,18 @@ the entire skill set.
 
 More get added as we go through the semester.
 
+## The answer checker
+
+`check-your-answer.ipynb` is a tool rather than an activity, and it stays useful all term. Solve an
+equation by hand, type your answer into it, and it tells you whether your answer actually satisfies
+the equation. It works for any first-order method we cover, and it handles the answers you cannot
+solve for y.
+
+It cannot solve anything, so it is no help for doing the homework. It is a lot of help for catching
+the dropped sign that would have cost you the problem. It also separates the two ways an answer goes
+wrong: a formula that does not satisfy the equation at all, and a formula that does but with a
+constant that misses the initial condition.
+
 ## How to work through one
 
 Each activity is a stack of boxes called cells. Text cells explain something. Code cells make a
