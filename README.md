@@ -27,6 +27,19 @@ the entire skill set.
 
 More get added as we go through the semester.
 
+### The marimo version of slope fields
+
+`01-slope-fields` also exists in a second form, at
+**https://maleygoes.github.io/diffyqinteractives/marimo/01-slope-fields/**
+
+Same activity, same pictures, different machinery. There are no cells to run and nothing to
+install: every picture is already drawn when the page loads, and the ones with sliders redraw
+while you drag. It also has a sandbox at the bottom where you can type your own equation and see
+its slope field.
+
+Use whichever you like. The notebook version is better if you want to read and change the code;
+the marimo version is better if you just want the activity.
+
 ## The answer checker
 
 `check-your-answer.ipynb` is a tool rather than an activity, and it stays useful all term. Solve an

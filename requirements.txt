@@ -42,3 +42,6 @@ ipyleaflet
 # Python: plotting libraries (optional)
 plotly>=6,<7
 bqplot
+
+# marimo: reactive notebooks, exported to WASM alongside the JupyterLite site
+marimo==0.24.0

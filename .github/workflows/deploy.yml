@@ -30,6 +30,20 @@ jobs:
         run: |
           cp README.md content
           jupyter lite build --contents content --output-dir dist
+      - name: Build the marimo interactives
+        run: |
+          mkdir -p dist/marimo
+          {
+            echo '<!doctype html><meta charset="utf-8">'
+            echo '<title>marimo interactives</title>'
+            echo '<h1>marimo interactives</h1><ul>'
+          } > dist/marimo/index.html
+          for nb in marimo/*.py; do
+            name=$(basename "$nb" .py)
+            marimo export html-wasm "$nb" --output "dist/marimo/$name" --mode run
+            echo "<li><a href=\"$name/\">$name</a></li>" >> dist/marimo/index.html
+          done
+          echo '</ul>' >> dist/marimo/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
