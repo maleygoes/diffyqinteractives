@@ -45,3 +45,4 @@ bqplot
 
 # marimo: reactive notebooks, exported to WASM alongside the JupyterLite site
 marimo==0.24.0
+uv
