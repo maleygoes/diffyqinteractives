@@ -14,38 +14,15 @@ app = marimo.App(width="medium", app_title="Slope Fields")
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(PAGES, mo, step):
     mo.md(
-        r"""
-        # Slope Fields: Seeing an ODE Before Solving It
-
-        **Time:** about 15 to 20 minutes.
-        **You need:** nothing but this page.
-
-        A first-order differential equation
-
-        $$\frac{dy}{dt}=f(t,y)$$
-
-        does not hand you the value of $y$. What it hands you is a rule for the *slope*: at every
-        point $(t,y)$ in the plane, it tells you how steeply a solution passing through that point
-        would be climbing or falling.
-
-        So before you solve anything, you can go to every point and draw a tiny segment at the slope
-        the equation demands there. That picture is a **slope field**.
-
-        > **The main idea:** a solution curve is a path that follows the little segments.
-
-        Everything in this activity is a consequence of that one sentence.
-
-        Each section asks you to predict before you look. Make the prediction out loud or on paper
-        first. Getting it wrong and seeing why is the point.
-
-        /// tip | This is a marimo notebook
-        There is nothing to install and nothing to run. Where a section asks you to predict
-        something, the picture stays hidden behind a **Show** switch until you flip it, so make the
-        prediction first. Once a picture is showing, any slider under it redraws the plot live as
-        you drag.
-        ///
+        f"""
+        <div style="display:flex;justify-content:space-between;align-items:baseline;
+                    border-bottom:1px solid #ddd;padding-bottom:.4rem;margin-bottom:.4rem;
+                    font-size:.85rem;opacity:.75">
+          <span><b>Slope fields</b> &nbsp;&middot;&nbsp; {PAGES[step]}</span>
+          <span>page {step + 1} of {len(PAGES)}</span>
+        </div>
         """
     )
     return
@@ -130,8 +107,104 @@ def _(mo):
     return (gated,)
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(mo):
+    PAGES = [
+        "Start here",
+        "1. First look: y' = y",
+        "2. Solution curves",
+        "3. A parameter you can change",
+        "4. When the slope depends on both variables",
+        "5. Predict a solution",
+        "6. Where the initial condition takes you",
+        "7. Final challenge",
+        "Sandbox",
+        "Wrap-up",
+    ]
+    LAST = len(PAGES) - 1
+    get_step, set_step = mo.state(0)
+    return LAST, PAGES, get_step, set_step
+
+
+@app.cell
+def _(get_step):
+    # Read the page number into a plain value. Every cell that shows page-specific
+    # content depends on this, so changing pages re-runs exactly those cells.
+    step = get_step()
+    return (step,)
+
+
+@app.cell
+def _(mo):
+    # Every widget lives here, in a cell that does NOT depend on `step`. marimo resets a
+    # UI element whenever the cell that creates it re-runs, so building them on a page-
+    # dependent cell would wipe a student's slider positions each time they turned a page.
+    see_exponential = mo.ui.switch(
+        value=False, label="Show the slope field for $y'=y$")
+    see_equilibrium = mo.ui.switch(
+        value=False, label="Show the field, then drag $a$")
+    a = mo.ui.slider(start=-2.0, stop=4.0, step=0.5, value=1.0,
+                     label="$a$", show_value=True)
+    see_nullcline = mo.ui.switch(
+        value=False, label="Show the field for $y'=t-y$")
+    reveal = mo.ui.switch(
+        value=False, label="Show the solution through $y(0)=2$")
+    y0 = mo.ui.slider(start=-3.0, stop=3.0, step=0.25, value=2.0,
+                      label="$y(t_0)$", show_value=True)
+    t0 = mo.ui.slider(start=-3.0, stop=3.0, step=0.25, value=0.0,
+                      label="$t_0$", show_value=True)
+    ghosts = mo.ui.checkbox(value=False, label="Overlay three neighboring starts")
+    see_logistic = mo.ui.switch(
+        value=False, label="Show the field, then drag the starting population")
+    p0 = mo.ui.slider(start=-1.0, stop=3.5, step=0.1, value=0.3,
+                      label="starting population $y(0)$", show_value=True)
+    expr = mo.ui.text(value="sin(t) - y", label="y′ =", full_width=False)
+    sb_y0 = mo.ui.slider(start=-4.0, stop=4.0, step=0.25, value=1.0,
+                         label="$y(0)$", show_value=True)
+    return (a, expr, ghosts, p0, reveal, sb_y0, see_equilibrium,
+            see_exponential, see_logistic, see_nullcline, t0, y0)
+
+
+@app.cell(hide_code=True)
+def _(mo, step):
+    mo.md(
+        r"""
+        # Slope Fields: Seeing an ODE Before Solving It
+
+        **Time:** about 15 to 20 minutes.
+        **You need:** nothing but this page.
+
+        A first-order differential equation
+
+        $$\frac{dy}{dt}=f(t,y)$$
+
+        does not hand you the value of $y$. What it hands you is a rule for the *slope*: at every
+        point $(t,y)$ in the plane, it tells you how steeply a solution passing through that point
+        would be climbing or falling.
+
+        So before you solve anything, you can go to every point and draw a tiny segment at the slope
+        the equation demands there. That picture is a **slope field**.
+
+        > **The main idea:** a solution curve is a path that follows the little segments.
+
+        Everything in this activity is a consequence of that one sentence.
+
+        Each section asks you to predict before you look. Make the prediction out loud or on paper
+        first. Getting it wrong and seeing why is the point.
+
+        /// tip | This is a marimo notebook
+        There is nothing to install and nothing to run. Where a section asks you to predict
+        something, the picture stays hidden behind a **Show** switch until you flip it, so make the
+        prediction first. Once a picture is showing, any slider under it redraws the plot live as
+        you drag.
+        ///
+        """
+    ) if step == 0 else None
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo, step):
     mo.md(
         r"""
         ## 1. First look: what does $y'=y$ mean?
@@ -148,27 +221,22 @@ def _(mo):
         - What about where $y < 0$?
         - What happens along the line $y = 0$?
         """
-    )
+    ) if step == 1 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    see_exponential = mo.ui.switch(
-        value=False, label="Show the slope field for $y'=y$")
-    see_exponential
-    return (see_exponential,)
-
-
-@app.cell(hide_code=True)
-def _(gated, see_exponential, slope_field):
-    gated(see_exponential,
-          lambda: slope_field(lambda t, y: y, title="y' = y"))
+def _(gated, mo, see_exponential, slope_field, step):
+    mo.vstack([
+        see_exponential,
+        gated(see_exponential,
+              lambda: slope_field(lambda t, y: y, title="y' = y")),
+    ]) if step == 1 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ### Check your intuition
@@ -181,12 +249,12 @@ def _(mo):
         **In your notes:** in one sentence, why are the segments flat at $y=0$, tilted up above it,
         and tilted down below it?
         """
-    )
+    ) if step == 1 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.accordion(
         {
             "Check yourself after you have written something": mo.md(
@@ -198,12 +266,12 @@ def _(mo):
                 """
             )
         }
-    )
+    ) if step == 1 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ## 2. Trace possible solution curves
@@ -213,21 +281,21 @@ def _(mo):
 
         Below, several exact solutions of $y'=y$ are laid over the field.
         """
-    )
+    ) if step == 2 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(np, slope_field):
+def _(np, slope_field, step):
     _t = np.linspace(-3, 3, 400)
     _solutions = [(_t, _y0 * np.exp(_t), f'y(0) = {_y0}') for _y0 in [-2, -1, 0, 1, 2]]
 
-    slope_field(lambda t, y: y, solutions=_solutions, title="y' = y with five solutions")
+    slope_field(lambda t, y: y, solutions=_solutions, title="y' = y with five solutions") if step == 2 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ### Observe
@@ -243,12 +311,12 @@ def _(mo):
 
         Notice you answered all three off the picture. You never needed the formula $y = Ce^{t}$.
         """
-    )
+    ) if step == 2 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.accordion(
         {
             "Check yourself": mo.md(
@@ -260,12 +328,12 @@ def _(mo):
                 """
             )
         }
-    )
+    ) if step == 2 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ## 3. A parameter you can change: $y'=a-y$
@@ -286,39 +354,27 @@ def _(mo):
 
         Now drag $a$ through several values.
         """
-    )
+    ) if step == 3 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    see_equilibrium = mo.ui.switch(
-        value=False, label="Show the field, then drag $a$")
-    see_equilibrium
-    return (see_equilibrium,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    a = mo.ui.slider(start=-2.0, stop=4.0, step=0.5, value=1.0,
-                     label="$a$", show_value=True)
-    a
-    return (a,)
-
-
-@app.cell(hide_code=True)
-def _(a, gated, see_equilibrium, slope_field):
-    gated(
+def _(a, gated, mo, see_equilibrium, slope_field, step):
+    mo.vstack([
         see_equilibrium,
-        lambda: slope_field(
-            lambda t, y: a.value - y, t_range=(-3, 3), y_range=(-3, 5),
-            title=f"y' = {a.value:.1f} - y   (equilibrium at y = {a.value:.1f})"),
-    )
+        a,
+        gated(
+            see_equilibrium,
+            lambda: slope_field(
+                lambda t, y: a.value - y, t_range=(-3, 3), y_range=(-3, 5),
+                title=f"y' = {a.value:.1f} - y   (equilibrium at y = {a.value:.1f})"),
+        ),
+    ]) if step == 3 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(a, mo):
+def _(a, mo, see_equilibrium, step):
     mo.md(
         rf"""
         ### What changes, and what stays the same?
@@ -337,12 +393,12 @@ def _(a, mo):
         That last one is what makes this a **stable equilibrium**: the field herds nearby solutions
         back toward it. Knock the system off the level $a$ and it returns on its own.
         """
-    )
+    ) if step == 3 and see_equilibrium.value else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ## 4. When the slope depends on both variables
@@ -357,30 +413,25 @@ def _(mo):
         Before you look: the slope is zero where $t - y = 0$. What set of points in the
         $(t,y)$-plane is that? Say it before you flip the switch.
         """
-    )
+    ) if step == 4 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    see_nullcline = mo.ui.switch(
-        value=False, label="Show the field for $y'=t-y$")
-    see_nullcline
-    return (see_nullcline,)
-
-
-@app.cell(hide_code=True)
-def _(gated, see_nullcline, slope_field):
-    gated(
+def _(gated, mo, see_nullcline, slope_field, step):
+    mo.vstack([
         see_nullcline,
-        lambda: slope_field(lambda t, y: t - y, t_range=(-3, 3),
-                            y_range=(-3, 3), density=25, title="y' = t - y"),
-    )
+        gated(
+            see_nullcline,
+            lambda: slope_field(lambda t, y: t - y, t_range=(-3, 3),
+                                y_range=(-3, 3), density=25, title="y' = t - y"),
+        ),
+    ]) if step == 4 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, see_nullcline, step):
     mo.md(
         r"""
         ### Find the zero-slope line
@@ -397,12 +448,12 @@ def _(mo):
         often the first useful thing you can do with an equation you cannot solve. You just
         extracted the qualitative behavior of this ODE using nothing but algebra on $t - y = 0$.
         """
-    )
+    ) if step == 4 and see_nullcline.value else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ## 5. Predict a solution before you see it
@@ -419,19 +470,12 @@ def _(mo):
 
         Commit to an answer. Then reveal the curve.
         """
-    )
+    ) if step == 5 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    reveal = mo.ui.switch(value=False, label="Show the solution through $y(0)=2$")
-    reveal
-    return (reveal,)
-
-
-@app.cell(hide_code=True)
-def _(gated, reveal, slope_field, trace):
+def _(gated, mo, reveal, slope_field, step, trace):
     def _draw():
         _f = lambda t, y: t - y
         _ts, _ys = trace(_f, t0=0.0, y0=2.0, t_range=(-3, 3))
@@ -439,13 +483,16 @@ def _(gated, reveal, slope_field, trace):
                            solutions=[(_ts, _ys, 'solution through y(0) = 2')],
                            title="y' = t - y,  y(0) = 2")
 
-    gated(reveal, _draw,
-          hint="Answer all three questions before you flip the switch.")
+    mo.vstack([
+        reveal,
+        gated(reveal, _draw,
+              hint="Answer all three questions before you flip the switch."),
+    ]) if step == 5 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, reveal, step):
     mo.md(
         r"""
         ### Interpretation
@@ -460,12 +507,12 @@ def _(mo):
         Now compare that to what happens far to the right: the curve settles into a straight run
         parallel to the nullcline. Solutions of this equation forget where they started.
         """
-    )
+    ) if step == 5 and reveal.value else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ## 6. Where does the initial condition take you?
@@ -479,53 +526,42 @@ def _(mo):
         - Early on, curves starting at different heights look completely different.
         - Late on, they all do the same thing.
         """
-    )
+    ) if step == 6 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    y0 = mo.ui.slider(start=-3.0, stop=3.0, step=0.25, value=2.0,
-                      label="$y(t_0)$", show_value=True)
-    t0 = mo.ui.slider(start=-3.0, stop=3.0, step=0.25, value=0.0,
-                      label="$t_0$", show_value=True)
-    ghosts = mo.ui.checkbox(value=False, label="Overlay three neighboring starts")
-    mo.vstack([y0, t0, ghosts])
-    return ghosts, t0, y0
+def _(ghosts, mo, slope_field, step, t0, trace, y0):
+    def _draw():
+        _f = lambda t, y: t - y
+        _starts = [y0.value]
+        if ghosts.value:
+            _starts += [y0.value - 1.5, y0.value + 1.5, y0.value + 3.0]
+        _sols = []
+        for _s in _starts:
+            _ts, _ys = trace(_f, t0=t0.value, y0=_s, t_range=(-3, 3))
+            _sols.append((_ts, _ys, f'y({t0.value:.2f}) = {_s:.2f}'))
+        return slope_field(_f, t_range=(-3, 3), y_range=(-4, 4), density=25,
+                           solutions=_sols,
+                           title=f"y' = t - y,  y({t0.value:.2f}) = {y0.value:.2f}")
 
-
-@app.cell(hide_code=True)
-def _(ghosts, slope_field, t0, trace, y0):
-    _f = lambda t, y: t - y
-
-    _starts = [y0.value]
-    if ghosts.value:
-        _starts += [y0.value - 1.5, y0.value + 1.5, y0.value + 3.0]
-
-    _sols = []
-    for _s in _starts:
-        _ts, _ys = trace(_f, t0=t0.value, y0=_s, t_range=(-3, 3))
-        _sols.append((_ts, _ys, f'y({t0.value:.2f}) = {_s:.2f}'))
-
-    slope_field(_f, t_range=(-3, 3), y_range=(-4, 4), density=25,
-                solutions=_sols,
-                title=f"y' = t - y,  y({t0.value:.2f}) = {y0.value:.2f}")
+    mo.vstack([y0, t0, ghosts, _draw()]) if step == 6 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         **In your notes:** describe in one sentence what all these solutions have in common for
         large $t$, even though they start in very different places.
         """
-    )
+    ) if step == 6 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.accordion(
         {
             "Check yourself": mo.md(
@@ -536,12 +572,12 @@ def _(mo):
                 """
             )
         }
-    )
+    ) if step == 6 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ## 7. Final challenge: read the field cold
@@ -565,28 +601,12 @@ def _(mo):
         Then flip the switch and check. The slider drops a solution curve in at a starting height
         of your choosing, so you can test each of your four cases in turn.
         """
-    )
+    ) if step == 7 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    see_logistic = mo.ui.switch(
-        value=False, label="Show the field, then drag the starting population")
-    see_logistic
-    return (see_logistic,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    p0 = mo.ui.slider(start=-1.0, stop=3.5, step=0.1, value=0.3,
-                      label="starting population $y(0)$", show_value=True)
-    p0
-    return (p0,)
-
-
-@app.cell(hide_code=True)
-def _(gated, p0, see_logistic, slope_field, trace):
+def _(gated, mo, p0, see_logistic, slope_field, step, trace):
     def _draw():
         _f = lambda t, y: y * (2 - y)
         _ts, _ys = trace(_f, t0=0.0, y0=p0.value, t_range=(-3, 3))
@@ -595,13 +615,17 @@ def _(gated, p0, see_logistic, slope_field, trace):
             solutions=[(_ts, _ys, f'y(0) = {p0.value:.1f}')],
             title=f"y' = y(2 - y),  y(0) = {p0.value:.1f}")
 
-    gated(see_logistic, _draw,
-          hint="Write down all five answers on paper before you flip the switch.")
+    mo.vstack([
+        see_logistic,
+        p0,
+        gated(see_logistic, _draw,
+              hint="Write down all five answers on paper before you flip the switch."),
+    ]) if step == 7 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.accordion(
         {
             "Check yourself once you have written your answers down": mo.md(
@@ -617,12 +641,12 @@ def _(mo):
                 """
             )
         }
-    )
+    ) if step == 7 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ## Sandbox: bring your own equation
@@ -631,46 +655,40 @@ def _(mo):
 
         Things worth trying: `y - t**2`, `sin(t) - y`, `y*(1-y)*(y-2)`, `-t/y`, `t*y`.
         """
-    )
+    ) if step == 8 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    expr = mo.ui.text(value="sin(t) - y", label="y′ =", full_width=False)
-    sb_y0 = mo.ui.slider(start=-4.0, stop=4.0, step=0.25, value=1.0,
-                         label="$y(0)$", show_value=True)
-    mo.vstack([expr, sb_y0])
-    return expr, sb_y0
+def _(expr, mo, np, sb_y0, slope_field, step, trace):
+    def _draw():
+        _env = {n: getattr(np, n) for n in
+                ('sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'pi', 'tanh', 'arctan')}
 
+        def _user_f(t, y):
+            return eval(expr.value, {"__builtins__": {}}, {**_env, "t": t, "y": y})
 
-@app.cell(hide_code=True)
-def _(expr, mo, np, sb_y0, slope_field, trace):
-    _env = {n: getattr(np, n) for n in
-            ('sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'pi', 'tanh', 'arctan')}
+        try:
+            with np.errstate(all='ignore'):
+                _ts, _ys = trace(_user_f, t0=0.0, y0=sb_y0.value, t_range=(-3, 3))
+                _ys = np.where(np.abs(_ys) > 1e3, np.nan, _ys)
+                return slope_field(_user_f, t_range=(-3, 3), y_range=(-4, 4),
+                                   density=25,
+                                   solutions=[(_ts, _ys, f'y(0) = {sb_y0.value:.2f}')],
+                                   title=f"y' = {expr.value}")
+        except Exception as _e:
+            return mo.callout(
+                mo.md(f"Could not read `{expr.value}` as an expression in "
+                      f"`t` and `y`.\n\n`{_e}`"),
+                kind="warn",
+            )
 
-    def _user_f(t, y):
-        return eval(expr.value, {"__builtins__": {}}, {**_env, "t": t, "y": y})
-
-    try:
-        with np.errstate(all='ignore'):
-            _ts, _ys = trace(_user_f, t0=0.0, y0=sb_y0.value, t_range=(-3, 3))
-            _ys = np.where(np.abs(_ys) > 1e3, np.nan, _ys)
-            _fig = slope_field(_user_f, t_range=(-3, 3), y_range=(-4, 4), density=25,
-                               solutions=[(_ts, _ys, f'y(0) = {sb_y0.value:.2f}')],
-                               title=f"y' = {expr.value}")
-        _out = _fig
-    except Exception as _e:
-        _out = mo.callout(
-            mo.md(f"Could not read `{expr.value}` as an expression in `t` and `y`.\n\n`{_e}`"),
-            kind="warn",
-        )
-    _out
+    mo.vstack([expr, sb_y0, _draw()]) if step == 8 else None
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, step):
     mo.md(
         r"""
         ## Wrap-up
@@ -696,8 +714,23 @@ def _(mo):
 
         If you can write that clearly, you have the idea.
         """
-    )
+    ) if step == 9 else None
     return
+
+
+@app.cell(hide_code=True)
+def _(LAST, mo, set_step):
+    nav_back = mo.ui.button(
+        label="← Back",
+        on_change=lambda _v: set_step(lambda s: max(s - 1, 0)))
+    nav_next = mo.ui.button(
+        label="Next →", kind="success",
+        on_change=lambda _v: set_step(lambda s: min(s + 1, LAST)))
+    mo.vstack([
+        mo.md("---"),
+        mo.hstack([nav_back, nav_next], justify="start"),
+    ])
+    return nav_back, nav_next
 
 
 if __name__ == "__main__":
