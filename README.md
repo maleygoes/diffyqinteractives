@@ -26,6 +26,7 @@ the entire skill set.
 | `02-eulers-method.ipynb` | Stepping to a numerical solution, and when it lies to you | 15 to 20 min |
 | `03-phase-lines.ipynb` | Reading long-run behavior off the equation, and two ways a fishery collapses | 15 to 20 min |
 | `04-undetermined-coefficients.ipynb` | Why the guess for a particular solution sometimes needs an extra x, read off the characteristic polynomial (Trench 5.4) | 15 to 20 min |
+| `05-runge-kutta.ipynb` | Where RK4's four slopes live, what they buy, and how to catch it when it fails quietly (Trench 3.3) | 15 to 20 min |
 
 More get added as we go through the semester.
 
